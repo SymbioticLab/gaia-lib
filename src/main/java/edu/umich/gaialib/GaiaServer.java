@@ -67,15 +67,6 @@ public class GaiaServer {
     }
   }
 
-  /**
-   * Main launches the server from the command line.
-   */
-  public static void main(String[] args) throws IOException, InterruptedException {
-    final GaiaServer server = new GaiaServer();
-    server.start();
-    server.blockUntilShutdown();
-  }
-
   static class GreeterImpl extends GaiaShuffleGrpc.GaiaShuffleImplBase {
 
     @Override
