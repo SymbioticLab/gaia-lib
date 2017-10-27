@@ -1,0 +1,24 @@
+// protocol between application master and Gaia Controller
+
+
+syntax = "proto2";
+
+option java_multiple_files = true;
+option java_package = "edu.umich.gaialib.gaiaprotos";
+option java_outer_classname = "GaiaProtos";
+
+// The greeting service definition.
+service GaiaShuffle {
+  // Sends a greeting
+  rpc submitShuffleInfo (ShuffleInfo) returns (ShuffleInfoReply) {}
+}
+
+// The request message containing the user's name.
+message ShuffleInfo {
+  required string name = 1;
+}
+
+// The response message containing the greetings
+message ShuffleInfoReply {
+  required string message = 1;
+}

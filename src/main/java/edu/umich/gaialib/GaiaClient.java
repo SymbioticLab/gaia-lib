@@ -25,19 +25,19 @@ import java.util.logging.Logger;
 
 import edu.umich.gaialib.gaiaprotos.*;
 import io.grpc.stub.StreamObserver;
-//import edu.umich.gaialib.*;
+
 
 /**
  * A simple client that requests a greeting from the {@link HelloWorldServer}.
  */
-public class HelloWorldClient {
-  private static final Logger logger = Logger.getLogger(HelloWorldClient.class.getName());
+public class GaiaClient {
+  private static final Logger logger = Logger.getLogger(GaiaClient.class.getName());
 
   private final ManagedChannel channel;
-  private final GreeterGrpc.GreeterBlockingStub blockingStub;
+  private final GaiaShuffleGrpc.GaiaShuffleBlockingStub blockingStub;
 
   /** Construct client connecting to HelloWorld server at {@code host:port}. */
-  public HelloWorldClient(String host, int port) {
+  public GaiaClient(String host, int port) {
     this(ManagedChannelBuilder.forAddress(host, port)
         // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid
         // needing certificates.
@@ -46,9 +46,9 @@ public class HelloWorldClient {
   }
 
   /** Construct client for accessing RouteGuide server using the existing channel. */
-  HelloWorldClient(ManagedChannel channel) {
+  GaiaClient(ManagedChannel channel) {
     this.channel = channel;
-    blockingStub = GreeterGrpc.newBlockingStub(channel);
+    blockingStub = GaiaShuffleGrpc.newBlockingStub(channel);
   }
 
   public void shutdown() throws InterruptedException {
@@ -58,10 +58,10 @@ public class HelloWorldClient {
   /** Say hello to server. */
   public void greet(String name) {
     logger.info("Will try to greet " + name + " ...");
-    HelloRequest request = HelloRequest.newBuilder().setName(name).build();
-    HelloReply response;
+    ShuffleInfo request = ShuffleInfo.newBuilder().setName(name).build();
+    ShuffleInfoReply response;
     try {
-      response = blockingStub.sayHello(request);
+      response = blockingStub.submitShuffleInfo(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       return;
@@ -74,7 +74,7 @@ public class HelloWorldClient {
    * greeting.
    */
   public static void main(String[] args) throws Exception {
-    HelloWorldClient client = new HelloWorldClient("localhost", 50051);
+    GaiaClient client = new GaiaClient("localhost", 50051);
     try {
       /* Access a service running on the local machine on port 50051 */
       String user = "world";
@@ -138,11 +138,11 @@ public class HelloWorldClient {
       server.blockUntilShutdown();
     }
 
-    static class GreeterImpl extends GreeterGrpc.GreeterImplBase {
+    static class GreeterImpl extends GaiaShuffleGrpc.GaiaShuffleImplBase {
 
       @Override
-      public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
-        HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+      public void submitShuffleInfo(ShuffleInfo req, StreamObserver<ShuffleInfoReply> responseObserver) {
+        ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Hello " + req.getName()).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
       }
