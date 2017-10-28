@@ -60,18 +60,20 @@ public class GaiaClient {
     /**
      * Submit ShuffleInfo to Gaia Controller
      */
-    public void submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP) {
+    public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP) {
         logger.info("Try to submit ShuffleInfo to controller");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
         sinfoBuiler.setJobID(jobID).setUsername(username);
 
-        for (Map.Entry<String, String> me : mappersIP.entrySet()) {
-            sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder().setMapperID(me.getKey()).setMapperIP(me.getValue()));
+
+        // TODO: also set Attempt ID
+        for (Map.Entry<TaskInfo, String> me : mappersIP.entrySet()) {
+            sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder().setMapperID(me.getKey().getTaskID()).setMapperIP(me.getValue()));
         }
 
-        for (Map.Entry<String, String> re : reducersIP.entrySet()) {
-            sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder().setReducerID(re.getKey()).setReducerIP(re.getValue()));
+        for (Map.Entry<TaskInfo, String> re : reducersIP.entrySet()) {
+            sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder().setReducerID(re.getKey().getTaskID()).setReducerIP(re.getValue()));
         }
 
         ShuffleInfoReply response;
