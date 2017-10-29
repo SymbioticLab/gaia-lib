@@ -19,6 +19,7 @@ package edu.umich.gaialib;
 import edu.umich.gaialib.gaiaprotos.GaiaShuffleGrpc;
 import edu.umich.gaialib.gaiaprotos.ShuffleInfo;
 import edu.umich.gaialib.gaiaprotos.ShuffleInfoReply;
+import edu.umich.gaialib.gaiaprotos.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -69,6 +70,12 @@ public class GaiaServer {
     }
 
     static class ShuffleServiceImpl extends GaiaShuffleGrpc.GaiaShuffleImplBase {
+        @Override
+        public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+            responseObserver.onNext(reply);
+            responseObserver.onCompleted();
+        }
 
         @Override
         public void submitShuffleInfo(ShuffleInfo req, StreamObserver<ShuffleInfoReply> responseObserver) {
@@ -76,9 +83,22 @@ public class GaiaServer {
              * do the job here
              */
 
+            System.out.println(req.getUsername());
+            System.out.println(req.getJobID());
+            System.out.println(req.getMappers(0).getMapperIP());
+            System.out.println(req.getMappers(0).getMapperID());
+            System.out.println(req.getReducers(0).getReducerIP());
+            System.out.println(req.getReducers(0).getReducerID());
+
             ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Hello " + req.getUsername()).build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        GaiaServer gaiaServer = new GaiaServer();
+        gaiaServer.start();
+        gaiaServer.blockUntilShutdown();
     }
 }

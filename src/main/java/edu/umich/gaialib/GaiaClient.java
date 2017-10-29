@@ -5,6 +5,7 @@ package edu.umich.gaialib;
 
 import io.grpc.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -46,10 +47,10 @@ public class GaiaClient {
      */
     public void greet(String name) {
         logger.info("Will try to greet " + name + " ...");
-        ShuffleInfo request = ShuffleInfo.newBuilder().setUsername(name).build();
-        ShuffleInfoReply response;
+        HelloRequest request = HelloRequest.newBuilder().setName(name).build();
+        HelloReply response;
         try {
-            response = blockingStub.submitShuffleInfo(request);
+            response = blockingStub.sayHello(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
@@ -60,6 +61,7 @@ public class GaiaClient {
     /**
      * Submit ShuffleInfo to Gaia Controller
      */
+
     public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP) {
         logger.info("Try to submit ShuffleInfo to controller");
 
@@ -69,11 +71,15 @@ public class GaiaClient {
 
         // TODO: also set Attempt ID
         for (Map.Entry<TaskInfo, String> me : mappersIP.entrySet()) {
-            sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder().setMapperID(me.getKey().getTaskID()).setMapperIP(me.getValue()));
+            sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder()
+                    .setMapperID(me.getKey().getTaskID())
+                    .setMapperIP(me.getValue()));
         }
 
         for (Map.Entry<TaskInfo, String> re : reducersIP.entrySet()) {
-            sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder().setReducerID(re.getKey().getTaskID()).setReducerIP(re.getValue()));
+            sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder()
+                    .setReducerID(re.getKey().getTaskID())
+                    .setReducerIP(re.getValue()));
         }
 
         ShuffleInfoReply response;
@@ -86,5 +92,22 @@ public class GaiaClient {
         }
 
         logger.info("Gaia controller returned: " + response.getMessage());
+    }
+
+    public static void main(String[] args) throws Exception {
+        GaiaClient gaiaClient = new GaiaClient("localhost", 50051);
+        try {
+            gaiaClient.greet("x");
+
+            Map<TaskInfo, String> mappersIP = new HashMap<TaskInfo, String>();
+            Map<TaskInfo, String> reducersIP = new HashMap<TaskInfo, String>();
+            TaskInfo taskInfo = new TaskInfo("taskID", "attemptID");
+            mappersIP.put(taskInfo, "http");
+            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
+            reducersIP.put(taskInfor, "httpr");
+            gaiaClient.submitShuffleInfo("x", "y", mappersIP, reducersIP);
+        } finally {
+            gaiaClient.shutdown();
+        }
     }
 }
