@@ -7,12 +7,14 @@ public class FlowInfo {
     String reduceID;
     String dataFilename;
 
+    long startOffset;
     long shuffleSize_byte;
 
-    public FlowInfo(String mapID, String reduceID, String dataFilename, long shuffleSize_byte) {
+    public FlowInfo(String mapID, String reduceID, String dataFilename, long startOffset, long shuffleSize_byte) {
         this.mapID = mapID;
         this.reduceID = reduceID;
         this.dataFilename = dataFilename;
+        this.startOffset = startOffset;
         this.shuffleSize_byte = shuffleSize_byte;
     }
 
@@ -32,12 +34,17 @@ public class FlowInfo {
         return shuffleSize_byte;
     }
 
+    public long getStartOffset() {
+        return startOffset;
+    }
+
     @Override
     public String toString() {
         return "FlowInfo{" +
                 "mapID='" + mapID + '\'' +
                 ", reduceID='" + reduceID + '\'' +
                 ", dataFilename='" + dataFilename + '\'' +
+                ", startOffset=" + startOffset +
                 ", shuffleSize_byte=" + shuffleSize_byte +
                 '}';
     }

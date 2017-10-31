@@ -59,7 +59,7 @@ public class GaiaClient {
     }
 
     /**
-     * Submit ShuffleInfo to Gaia Controller
+     * Submit ShuffleInfo to Gaia Controller, use "user:job:map:reduce" as the key for Map<String , FlowInfo>
      */
 
     public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP, Map<String , FlowInfo> filenameToFlowsMap) {
@@ -106,10 +106,10 @@ public class GaiaClient {
             TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
             reducersIP.put(taskInfor, "httpr");
 
-            FlowInfo flowInfo = new FlowInfo("mapID", "reduceID", "dir/file.out", 100);
+            FlowInfo flowInfo = new FlowInfo("mapID", "reduceID", "dir/file.out", 100, 500);
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
-            fmap.put( "dir/file.out", flowInfo);
+            fmap.put( "user:job:map:reduce", flowInfo);
 
             gaiaClient.submitShuffleInfo("x", "y", mappersIP, reducersIP, fmap);
         } finally {
