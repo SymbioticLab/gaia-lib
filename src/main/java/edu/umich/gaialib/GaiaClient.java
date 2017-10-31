@@ -60,29 +60,38 @@ public class GaiaClient {
 
     /**
      * Submit ShuffleInfo to Gaia Controller, use "user:job:map:reduce" as the key for Map<String , FlowInfo>
-     *     put "TaskAttemptID, IP" in Map<String, String >
+     * put "TaskAttemptID, IP" in Map<String, String >
      */
 
-    public void submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String , FlowInfo> filenameToFlowsMap) {
+    public void submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
         logger.info("Try to submit ShuffleInfo to controller");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
         sinfoBuiler.setJobID(jobID).setUsername(username);
 
-
-        // TODO: also set Attempt ID
+        // Here the Map/Reduce ID are all with AttemptID
         for (Map.Entry<String, String> me : mappersIP.entrySet()) {
-            sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder()
+            sinfoBuiler.addMappers(ShuffleInfo.MapperInfo.newBuilder()
                     .setMapperID(me.getKey())
                     .setMapperIP(me.getValue()));
         }
 
         for (Map.Entry<String, String> re : reducersIP.entrySet()) {
-            sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder()
+            sinfoBuiler.addReducers(ShuffleInfo.ReducerInfo.newBuilder()
                     .setReducerID(re.getKey())
                     .setReducerIP(re.getValue()));
         }
 
+        for (Map.Entry<String, FlowInfo> fe : filenameToFlowsMap.entrySet()) {
+            sinfoBuiler.addFlows(ShuffleInfo.FlowInfo.newBuilder()
+                    .setDataFilename(fe.getKey())
+                    .setMapAttemptID(fe.getValue().getMapAttemptID())
+                    .setReduceAttemptID(fe.getValue().getReduceAttemptID())
+                    .setStartOffSet(fe.getValue().getStartOffset())
+                    .setFlowSize(fe.getValue().getShuffleSize_byte()));
+        }
+
+        // Handle reply
         ShuffleInfoReply response;
 
         try {
@@ -110,7 +119,7 @@ public class GaiaClient {
             FlowInfo flowInfo = new FlowInfo("mapAttemptID", "reduceAttemptID", "dir/file.out", 100, 500);
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
-            fmap.put( "user:job:map:reduce", flowInfo);
+            fmap.put("user:job:map:reduce", flowInfo);
 
             gaiaClient.submitShuffleInfo("x", "y", mappersIP, reducersIP, fmap);
         } finally {

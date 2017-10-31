@@ -65,7 +65,7 @@ public abstract class GaiaAbstractServer {
             // do the job abstractly
             processReq(req);
 
-            ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Hello " + req.getUsername()).build();
+            ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Request Complete").build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }
