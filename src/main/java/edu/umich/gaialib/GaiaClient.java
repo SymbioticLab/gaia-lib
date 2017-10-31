@@ -62,7 +62,7 @@ public class GaiaClient {
      * Submit ShuffleInfo to Gaia Controller
      */
 
-    public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP) {
+    public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP, Map<String , FlowInfo> filenameToFlowsMap) {
         logger.info("Try to submit ShuffleInfo to controller");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
@@ -105,7 +105,13 @@ public class GaiaClient {
             mappersIP.put(taskInfo, "http");
             TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
             reducersIP.put(taskInfor, "httpr");
-            gaiaClient.submitShuffleInfo("x", "y", mappersIP, reducersIP);
+
+            FlowInfo flowInfo = new FlowInfo("mapID", "reduceID", "dir/file.out", 100);
+
+            Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
+            fmap.put( "dir/file.out", flowInfo);
+
+            gaiaClient.submitShuffleInfo("x", "y", mappersIP, reducersIP, fmap);
         } finally {
             gaiaClient.shutdown();
         }
