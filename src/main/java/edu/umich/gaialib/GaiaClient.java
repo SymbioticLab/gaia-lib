@@ -60,9 +60,10 @@ public class GaiaClient {
 
     /**
      * Submit ShuffleInfo to Gaia Controller, use "user:job:map:reduce" as the key for Map<String , FlowInfo>
+     *     put "TaskAttemptID, IP" in Map<String, String >
      */
 
-    public void submitShuffleInfo(String username, String jobID, Map<TaskInfo, String> mappersIP, Map<TaskInfo, String> reducersIP, Map<String , FlowInfo> filenameToFlowsMap) {
+    public void submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String , FlowInfo> filenameToFlowsMap) {
         logger.info("Try to submit ShuffleInfo to controller");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
@@ -70,15 +71,15 @@ public class GaiaClient {
 
 
         // TODO: also set Attempt ID
-        for (Map.Entry<TaskInfo, String> me : mappersIP.entrySet()) {
+        for (Map.Entry<String, String> me : mappersIP.entrySet()) {
             sinfoBuiler.addMappers( ShuffleInfo.MapperInfo.newBuilder()
-                    .setMapperID(me.getKey().getTaskID())
+                    .setMapperID(me.getKey())
                     .setMapperIP(me.getValue()));
         }
 
-        for (Map.Entry<TaskInfo, String> re : reducersIP.entrySet()) {
+        for (Map.Entry<String, String> re : reducersIP.entrySet()) {
             sinfoBuiler.addReducers( ShuffleInfo.ReducerInfo.newBuilder()
-                    .setReducerID(re.getKey().getTaskID())
+                    .setReducerID(re.getKey())
                     .setReducerIP(re.getValue()));
         }
 
@@ -99,14 +100,14 @@ public class GaiaClient {
         try {
             gaiaClient.greet("x");
 
-            Map<TaskInfo, String> mappersIP = new HashMap<TaskInfo, String>();
-            Map<TaskInfo, String> reducersIP = new HashMap<TaskInfo, String>();
-            TaskInfo taskInfo = new TaskInfo("taskID", "attemptID");
-            mappersIP.put(taskInfo, "http");
-            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
-            reducersIP.put(taskInfor, "httpr");
+            Map<String, String> mappersIP = new HashMap<String, String>();
+            Map<String, String> reducersIP = new HashMap<String, String>();
+//            TaskInfo taskInfo = new TaskInfo("taskID", "attemptID");
+            mappersIP.put("taskID_attemptID", "http");
+//            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
+            reducersIP.put("taskIDr_attemptIDr", "httpr");
 
-            FlowInfo flowInfo = new FlowInfo("mapID", "reduceID", "dir/file.out", 100, 500);
+            FlowInfo flowInfo = new FlowInfo("mapAttemptID", "reduceAttemptID", "dir/file.out", 100, 500);
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
             fmap.put( "user:job:map:reduce", flowInfo);

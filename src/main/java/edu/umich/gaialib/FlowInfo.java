@@ -3,27 +3,27 @@ package edu.umich.gaialib;
 
 public class FlowInfo {
 
-    String mapID;
-    String reduceID;
+    String mapAttemptID;
+    String reduceAttemptID;
     String dataFilename;
 
     long startOffset;
     long shuffleSize_byte;
 
-    public FlowInfo(String mapID, String reduceID, String dataFilename, long startOffset, long shuffleSize_byte) {
-        this.mapID = mapID;
-        this.reduceID = reduceID;
+    public FlowInfo(String mapAttemptID, String reduceAttemptID, String dataFilename, long startOffset, long shuffleSize_byte) {
+        this.mapAttemptID = mapAttemptID;
+        this.reduceAttemptID = reduceAttemptID;
         this.dataFilename = dataFilename;
         this.startOffset = startOffset;
         this.shuffleSize_byte = shuffleSize_byte;
     }
 
-    public String getMapID() {
-        return mapID;
+    public String getMapAttemptID() {
+        return mapAttemptID;
     }
 
-    public String getReduceID() {
-        return reduceID;
+    public String getReduceAttemptID() {
+        return reduceAttemptID;
     }
 
     public String getDataFilename() {
@@ -41,8 +41,8 @@ public class FlowInfo {
     @Override
     public String toString() {
         return "FlowInfo{" +
-                "mapID='" + mapID + '\'' +
-                ", reduceID='" + reduceID + '\'' +
+                "mapAttemptID='" + mapAttemptID + '\'' +
+                ", reduceAttemptID='" + reduceAttemptID + '\'' +
                 ", dataFilename='" + dataFilename + '\'' +
                 ", startOffset=" + startOffset +
                 ", shuffleSize_byte=" + shuffleSize_byte +
