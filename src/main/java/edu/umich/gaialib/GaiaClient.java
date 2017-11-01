@@ -107,7 +107,7 @@ public class GaiaClient {
     public static void main(String[] args) throws Exception {
         GaiaClient gaiaClient = new GaiaClient("localhost", 50051);
         try {
-            gaiaClient.greet("x");
+//            gaiaClient.greet("x");
 
             Map<String, String> mappersIP = new HashMap<String, String>();
             Map<String, String> reducersIP = new HashMap<String, String>();
