@@ -20,27 +20,32 @@ public class GaiaTestServerSCP {
         public void processReq(ShuffleInfo req) {
             logger.info("Received req: " + req);
 
+            for ( int i = 0 ; i < req.getFlowsList().size(); i ++){
 
 
-            String dataName = req.getFlowsList().get(0).getDataFilename();
-            String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") );
+                String dataName = req.getFlowsList().get(i).getDataFilename();
+                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output*";
 
-            // trim to only include the /output
-            String dstIP = req.getReducersList().get(0).getReducerIP().split(":",2)[0];
+                // trim to only include the /output
+                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
+                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-            String cmd = "scp -r " +  trimmedData + " " + dstIP + ":" + trimmedData;
+                String cmd = "scp -r " + srcIP + ":" + trimmedData + " " + dstIP + ":" + trimmedData;
 
-            System.out.println("Invoking " + cmd);
+                System.out.println("Invoking " + cmd);
 
-            Process p = null;
-            try {
-                p = Runtime.getRuntime().exec(cmd);
-                p.waitFor();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Process p = null;
+                try {
+                    p = Runtime.getRuntime().exec(cmd);
+                    p.waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+
 /*
             try {
                 int inChar = System.in.read();
