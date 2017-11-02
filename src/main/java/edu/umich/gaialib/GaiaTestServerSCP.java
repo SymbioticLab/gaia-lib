@@ -65,14 +65,14 @@ public class GaiaTestServerSCP {
                 }
             }
 
-            try {
+ /*           try {
                 System.out.println("Finished scp, Blocked");
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
             }
             catch (IOException e){
                 System.out.println("Error reading from user");
-            }
+            }*/
 
         }
     }
