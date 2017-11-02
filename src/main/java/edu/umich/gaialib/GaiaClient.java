@@ -84,7 +84,7 @@ public class GaiaClient {
 
         for (Map.Entry<String, FlowInfo> fe : filenameToFlowsMap.entrySet()) {
             sinfoBuiler.addFlows(ShuffleInfo.FlowInfo.newBuilder()
-                    .setDataFilename(fe.getKey())
+                    .setDataFilename(fe.getValue().getDataFilename())
                     .setMapAttemptID(fe.getValue().getMapAttemptID())
                     .setReduceAttemptID(fe.getValue().getReduceAttemptID())
                     .setStartOffSet(fe.getValue().getStartOffset())
@@ -116,7 +116,7 @@ public class GaiaClient {
 //            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
             reducersIP.put("R1", "maxi2");
 
-            FlowInfo flowInfo = new FlowInfo("M1", "R1", "/tmp/file", 0, 500);
+            FlowInfo flowInfo = new FlowInfo("M1", "R1", "/tmp/file/output/ddd/file.out", 0, 500);
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
             fmap.put("user:job:map:reduce", flowInfo);

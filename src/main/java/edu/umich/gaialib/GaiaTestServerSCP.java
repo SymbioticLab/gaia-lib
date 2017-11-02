@@ -32,13 +32,23 @@ public class GaiaTestServerSCP {
 
             System.out.println("Invoking " + cmd);
 
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec(cmd);
+                p.waitFor();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+/*
             try {
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
             }
             catch (IOException e){
                 System.out.println("Error reading from user");
-            }
+            }*/
 
         }
     }
