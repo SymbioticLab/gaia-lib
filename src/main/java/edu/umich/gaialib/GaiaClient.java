@@ -112,11 +112,11 @@ public class GaiaClient {
             Map<String, String> mappersIP = new HashMap<String, String>();
             Map<String, String> reducersIP = new HashMap<String, String>();
 //            TaskInfo taskInfo = new TaskInfo("taskID", "attemptID");
-            mappersIP.put("taskID_attemptID", "http");
+            mappersIP.put("taskID_attemptID", "maxi1");
 //            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
-            reducersIP.put("taskIDr_attemptIDr", "httpr");
+            reducersIP.put("taskIDr_attemptIDr", "maxi2");
 
-            FlowInfo flowInfo = new FlowInfo("mapAttemptID", "reduceAttemptID", "dir/file.out", 100, 500);
+            FlowInfo flowInfo = new FlowInfo("mapAttemptID", "reduceAttemptID", "/tmp/file", 0, 500);
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
             fmap.put("user:job:map:reduce", flowInfo);
