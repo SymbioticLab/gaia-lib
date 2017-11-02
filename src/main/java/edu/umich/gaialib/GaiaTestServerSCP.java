@@ -50,12 +50,19 @@ public class GaiaTestServerSCP {
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-                String cmd = "rsync -r --ignore-existing " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
+                String cmd_mkdir = "ssh wentingt@" + dstIP + " 'mkdir " + trimmedData + "'";
 
+                String cmd = "scp -r " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
+
+                System.out.println("Invoking " + cmd_mkdir);
                 System.out.println("Invoking " + cmd);
 
                 Process p = null;
                 try {
+
+                    p = Runtime.getRuntime().exec(cmd_mkdir);
+                    p.waitFor();
+
                     p = Runtime.getRuntime().exec(cmd);
                     p.waitFor();
                 } catch (IOException e) {
@@ -65,14 +72,14 @@ public class GaiaTestServerSCP {
                 }
             }
 
- /*           try {
+            try {
                 System.out.println("Finished scp, Blocked");
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
             }
             catch (IOException e){
                 System.out.println("Error reading from user");
-            }*/
+            }
 
         }
     }
