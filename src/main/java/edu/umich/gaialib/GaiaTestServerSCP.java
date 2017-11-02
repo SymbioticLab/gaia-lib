@@ -50,7 +50,7 @@ public class GaiaTestServerSCP {
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-                String cmd = "scp -r " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
+                String cmd = "rsync -r --ignore-existing " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
 
                 System.out.println("Invoking " + cmd);
 
