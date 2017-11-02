@@ -24,7 +24,7 @@ public class GaiaTestServerSCP {
 
 
                 String dataName = req.getFlowsList().get(i).getDataFilename();
-                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output*";
+                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output/*";
 
                 // trim to only include the /output
                 String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
