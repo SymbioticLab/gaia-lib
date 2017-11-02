@@ -22,13 +22,33 @@ public class GaiaTestServerSCP {
 
             for ( int i = 0 ; i < req.getFlowsList().size(); i ++){
 
+                ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
 
-                String dataName = req.getFlowsList().get(i).getDataFilename();
+                String dataName = finfo.getDataFilename();
                 String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output/*";
 
                 // trim to only include the /output
-                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
-                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
+
+                String srcID = finfo.getMapAttemptID();
+                String dstID = finfo.getReduceAttemptID();
+
+                String dstIP = null;
+                String srcIP = null;
+
+                for (ShuffleInfo.MapperInfo minfo : req.getMappersList()){
+                    if (minfo.getMapperID().equals(srcID)){
+                        srcIP = minfo.getMapperIP();
+                    }
+                }
+
+                for (ShuffleInfo.ReducerInfo rinfo : req.getReducersList()){
+                    if (rinfo.getReducerID().equals(srcID)){
+                        dstIP = rinfo.getReducerIP();
+                    }
+                }
+
+//                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
+//                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
                 String cmd = "scp -r " + srcIP + ":" + trimmedData + " " + dstIP + ":" + trimmedData;
 
