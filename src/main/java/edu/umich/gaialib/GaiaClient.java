@@ -64,7 +64,7 @@ public class GaiaClient {
      */
 
     public void submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
-        logger.info("Try to submit ShuffleInfo to controller");
+        logger.info("NEW! Try to submit ShuffleInfo to controller");
         System.out.println("NEW!!! Submitting ShuffleInfo!!!");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
