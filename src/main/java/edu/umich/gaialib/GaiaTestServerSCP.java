@@ -25,7 +25,7 @@ public class GaiaTestServerSCP {
                 ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
 
                 String dataName = finfo.getDataFilename();
-                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output/*";
+                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output";
 
                 // trim to only include the /output
 
@@ -50,7 +50,7 @@ public class GaiaTestServerSCP {
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-                String cmd = "scp -r " + srcIP + ":" + trimmedData + " " + dstIP + ":" + trimmedData;
+                String cmd = "scp -r " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
 
                 System.out.println("Invoking " + cmd);
 
