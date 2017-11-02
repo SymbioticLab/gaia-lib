@@ -50,7 +50,7 @@ public class GaiaTestServerSCP {
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-                String cmd_mkdir = "ssh wentingt@" + dstIP + " 'mkdir " + trimmedData + "'";
+                String cmd_mkdir = "ssh wentingt@" + dstIP + " 'mkdir -p" + trimmedData + "'";
 
                 String cmd = "scp -r " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
 
