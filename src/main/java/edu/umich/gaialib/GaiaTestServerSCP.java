@@ -42,7 +42,7 @@ public class GaiaTestServerSCP {
                 }
 
                 for (ShuffleInfo.ReducerInfo rinfo : req.getReducersList()){
-                    if (rinfo.getReducerID().equals(srcID)){
+                    if (rinfo.getReducerID().equals(dstID)){
                         dstIP = rinfo.getReducerIP();
                     }
                 }
