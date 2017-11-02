@@ -37,13 +37,13 @@ public class GaiaTestServerSCP {
 
                 for (ShuffleInfo.MapperInfo minfo : req.getMappersList()){
                     if (minfo.getMapperID().equals(srcID)){
-                        srcIP = minfo.getMapperIP();
+                        srcIP = minfo.getMapperIP().split(":")[0];
                     }
                 }
 
                 for (ShuffleInfo.ReducerInfo rinfo : req.getReducersList()){
                     if (rinfo.getReducerID().equals(dstID)){
-                        dstIP = rinfo.getReducerIP();
+                        dstIP = rinfo.getReducerIP().split(":")[0];
                     }
                 }
 
