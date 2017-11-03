@@ -89,6 +89,16 @@ public class GaiaTestServerSCP {
 
                     p = Runtime.getRuntime().exec(cmd);
                     p.waitFor();
+
+                    bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.out.println(line);
+                    }
+
+                    bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.out.println(line);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -96,14 +106,14 @@ public class GaiaTestServerSCP {
                 }
             }
 
-            try {
+/*            try {
                 System.out.println("Finished scp, Blocked");
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
             }
             catch (IOException e){
                 System.out.println("Error reading from user");
-            }
+            }*/
 
         }
     }
