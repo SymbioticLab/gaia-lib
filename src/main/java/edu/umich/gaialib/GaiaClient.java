@@ -46,7 +46,7 @@ public class GaiaClient {
      * Say hello to server.
      */
     public void greet(String name) {
-        logger.info("Will try to greet " + name + " ...");
+        logger.info("New: Will try to greet " + name + " ...");
         HelloRequest request = HelloRequest.newBuilder().setName(name).build();
         HelloReply response;
         try {
@@ -55,7 +55,7 @@ public class GaiaClient {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return;
         }
-        logger.info("Greeting: " + response.getMessage());
+        logger.info("Greeting returned: " + response.getMessage());
     }
 
     /**
