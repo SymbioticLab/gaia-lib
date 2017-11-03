@@ -23,14 +23,14 @@ public class GaiaTestServerSCP {
         public void processReq(ShuffleInfo req) {
             logger.info("Received req: " + req);
 
-            try {
+/*            try {
                 System.out.println("Finished scp, Blocked");
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
             }
             catch (IOException e){
                 System.out.println("Error reading from user");
-            }
+            }*/
 
             for ( int i = 0 ; i < req.getFlowsList().size(); i ++){
 
