@@ -1,8 +1,11 @@
 package edu.umich.gaialib;
 
 import edu.umich.gaialib.gaiaprotos.ShuffleInfo;
+import sun.misc.IOUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 // A simple unit test for GaiaClient and Hadoop integration
@@ -19,6 +22,15 @@ public class GaiaTestServerSCP {
 
         public void processReq(ShuffleInfo req) {
             logger.info("Received req: " + req);
+
+            try {
+                System.out.println("Finished scp, Blocked");
+                int inChar = System.in.read();
+                System.out.print("Now proceeding");
+            }
+            catch (IOException e){
+                System.out.println("Error reading from user");
+            }
 
             for ( int i = 0 ; i < req.getFlowsList().size(); i ++){
 
@@ -62,6 +74,17 @@ public class GaiaTestServerSCP {
 
                     p = Runtime.getRuntime().exec(cmd_mkdir);
                     p.waitFor();
+
+                    String line;
+                    BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.out.println(line);
+                    }
+
+                    bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.out.println(line);
+                    }
 
                     p = Runtime.getRuntime().exec(cmd);
                     p.waitFor();
