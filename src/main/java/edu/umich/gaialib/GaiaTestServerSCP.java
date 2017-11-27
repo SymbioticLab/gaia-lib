@@ -44,20 +44,20 @@ public class GaiaTestServerSCP {
                 String srcID = finfo.getMapAttemptID();
                 String dstID = finfo.getReduceAttemptID();
 
-                String dstIP = null;
-                String srcIP = null;
+                String srcIP = finfo.getMapperIP();
+                String dstIP = finfo.getReducerIP();
 
-                for (ShuffleInfo.MapperInfo minfo : req.getMappersList()){
-                    if (minfo.getMapperID().equals(srcID)){
-                        srcIP = minfo.getMapperIP().split(":")[0];
-                    }
-                }
-
-                for (ShuffleInfo.ReducerInfo rinfo : req.getReducersList()){
-                    if (rinfo.getReducerID().equals(dstID)){
-                        dstIP = rinfo.getReducerIP().split(":")[0];
-                    }
-                }
+//                for (ShuffleInfo.MapperInfo minfo : req.getMappersList()){
+//                    if (minfo.getMapperID().equals(srcID)){
+//                        srcIP = minfo.getMapperIP().split(":")[0];
+//                    }
+//                }
+//
+//                for (ShuffleInfo.ReducerInfo rinfo : req.getReducersList()){
+//                    if (rinfo.getReducerID().equals(dstID)){
+//                        dstIP = rinfo.getReducerIP().split(":")[0];
+//                    }
+//                }
 
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];

@@ -70,27 +70,67 @@ public class GaiaClient {
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
         sinfoBuiler.setJobID(jobID).setUsername(username);
 
-        // Here the Map/Reduce ID are all with AttemptID
-        for (Map.Entry<String, String> me : mappersIP.entrySet()) {
-            sinfoBuiler.addMappers(ShuffleInfo.MapperInfo.newBuilder()
-                    .setMapperID(me.getKey())
-                    .setMapperIP(me.getValue()));
-        }
-
-        for (Map.Entry<String, String> re : reducersIP.entrySet()) {
-            sinfoBuiler.addReducers(ShuffleInfo.ReducerInfo.newBuilder()
-                    .setReducerID(re.getKey())
-                    .setReducerIP(re.getValue()));
-        }
 
         for (Map.Entry<String, FlowInfo> fe : filenameToFlowsMap.entrySet()) {
-            sinfoBuiler.addFlows(ShuffleInfo.FlowInfo.newBuilder()
+
+
+            ShuffleInfo.FlowInfo.Builder tmpFlow = ShuffleInfo.FlowInfo.newBuilder()
                     .setDataFilename(fe.getValue().getDataFilename())
                     .setMapAttemptID(fe.getValue().getMapAttemptID())
                     .setReduceAttemptID(fe.getValue().getReduceAttemptID())
                     .setStartOffSet(fe.getValue().getStartOffset())
-                    .setFlowSize(fe.getValue().getShuffleSize_byte()));
+                    .setFlowSize(fe.getValue().getShuffleSize_byte());
+
+            if (fe.getValue().getMapIP() != null) {
+                tmpFlow.setMapperIP(fe.getValue().getMapIP());
+            } else {
+                if (mappersIP.containsKey(fe.getValue().getMapAttemptID())) {
+                    tmpFlow.setMapperIP(mappersIP.get(fe.getValue().getMapAttemptID()));
+                }
+                else {
+                    logger.info("no mapIP!");
+//                    throw (new Exception("no map IP"));
+                }
+            }
+
+            if (fe.getValue().getReduceIP() != null) {
+                tmpFlow.setReducerIP(fe.getValue().getReduceIP());
+            } else {
+                if (reducersIP.containsKey(fe.getValue().getReduceAttemptID())) {
+                    tmpFlow.setReducerIP(reducersIP.get(fe.getValue().getReduceAttemptID()));
+                }
+                else {
+                    logger.info("no reduceIP!");
+//                    throw (new Exception("no map IP"));
+                }
+            }
+
+            sinfoBuiler.addFlows(tmpFlow);
         }
+
+
+/*        // Here the Map/Reduce ID are all AttemptID
+        // If submitted the ID-IP map, check FlowInfo against the map
+        for (Map.Entry<String, String> me : mappersIP.entrySet()) {
+
+            if (!filenameToFlowsMap.containsKey(me.getKey())) {
+                sinfoBuiler.
+//                filenameToFlowsMap.get()
+            }
+
+
+*//*            sinfoBuiler.addMappers(ShuffleInfo.MapperInfo.newBuilder()
+                    .setMapperID(me.getKey())
+                    .setMapperIP(me.getValue()));*//*
+        }
+
+        for (Map.Entry<String, String> re : reducersIP.entrySet()) {
+
+
+*//*            sinfoBuiler.addReducers(ShuffleInfo.ReducerInfo.newBuilder()
+                    .setReducerID(re.getKey())
+                    .setReducerIP(re.getValue()));*//*
+        }*/
 
         // Handle reply
         ShuffleInfoReply response;
@@ -117,7 +157,7 @@ public class GaiaClient {
 //            TaskInfo taskInfor = new TaskInfo("taskIDr", "attemptIDr");
             reducersIP.put("R1", "maxi2");
 
-            FlowInfo flowInfo = new FlowInfo("M1", "R1", "/tmp/file/output/ddd/file.out", 0, 500);
+            FlowInfo flowInfo = new FlowInfo("M1", "R1", "/tmp/file/output/ddd/file.out", 0, 500, "maxi1", "maxi2");
 
             Map<String, FlowInfo> fmap = new HashMap<String, FlowInfo>();
             fmap.put("user:job:map:reduce", flowInfo);

@@ -66,10 +66,10 @@ public class GaiaServer {
 
             System.out.println(req.getUsername());
             System.out.println(req.getJobID());
-            System.out.println(req.getMappers(0).getMapperIP());
-            System.out.println(req.getMappers(0).getMapperID());
-            System.out.println(req.getReducers(0).getReducerIP());
-            System.out.println(req.getReducers(0).getReducerID());
+//            System.out.println(req.getMappers(0).getMapperIP());
+//            System.out.println(req.getMappers(0).getMapperID());
+//            System.out.println(req.getReducers(0).getReducerIP());
+//            System.out.println(req.getReducers(0).getReducerID());
 
             ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Hello " + req.getUsername()).build();
             responseObserver.onNext(reply);
