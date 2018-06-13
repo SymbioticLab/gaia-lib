@@ -6,6 +6,8 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 /**
@@ -54,6 +56,19 @@ public class GaiaServer {
         @Override
         public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
             HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+            Scanner scanner = new Scanner(System.in);
+            try {
+                // while (true) {
+                    System.out.println("Please input a line");
+                    long then = System.currentTimeMillis();
+                    String line = scanner.nextLine();
+                    long now = System.currentTimeMillis();
+                    System.out.printf("Waited %.3fs for user input%n", (now - then) / 1000d);
+                    System.out.printf("User input was: %s%n", line);
+                // }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }
