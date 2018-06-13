@@ -94,10 +94,10 @@
                                     <pattern>com.google</pattern>
                                     <shadedPattern>hidden.gaialib.google</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>io.grpc</pattern>
-                                    <shadedPattern>hidden.gaialib.grpc</shadedPattern>
-                                </relocation>
+                                <!--<relocation>-->
+                                    <!--<pattern>io.grpc</pattern>-->
+                                    <!--<shadedPattern>hidden.gaialib.grpc</shadedPattern>-->
+                                <!--</relocation>-->
                             </relocations>
                         </configuration>
                     </execution>
