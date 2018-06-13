@@ -6,13 +6,7 @@ package edu.umich.gaialib;
 import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.umich.gaialib.gaiaprotos.*;
@@ -37,7 +31,7 @@ public class TerraClient {
     /**
      * Construct client for accessing Gaia Controller server using the existing channel.
      */
-    private TerraClient(ManagedChannel channel) {
+    TerraClient(ManagedChannel channel) {
         this.channel = channel;
         futureStub = GaiaShuffleGrpc.newFutureStub(channel);
     }
