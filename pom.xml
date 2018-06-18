@@ -90,12 +90,16 @@
                                 </excludes>
                             </artifactSet>
                             <relocations>
-				    <!--
+
                                 <relocation>
                                     <pattern>com.google</pattern>
                                     <shadedPattern>hidden.gaialib.google</shadedPattern>
+                                    <!-- https://maven.apache.org/plugins/maven-shade-plugin/examples/class-relocation.html -->
+                                    <excludes>
+                                        <exclude>com.google.common.util.concurrent</exclude>
+                                    </excludes>
                                 </relocation>
--->
+
                                 <!--<relocation>-->
                                     <!--<pattern>io.grpc</pattern>-->
                                     <!--<shadedPattern>hidden.gaialib.grpc</shadedPattern>-->
