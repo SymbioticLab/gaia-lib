@@ -92,12 +92,16 @@
                             <relocations>
 
                                 <relocation>
-                                    <pattern>com.google</pattern>
-                                    <shadedPattern>hidden.gaialib.google</shadedPattern>
+                                    <pattern>com.google.common.collect</pattern>
+                                    <shadedPattern>hidden.gaialib.google.common.collect</shadedPattern>
                                     <!-- https://maven.apache.org/plugins/maven-shade-plugin/examples/class-relocation.html -->
-                                    <excludes>
-                                        <exclude>com.google.common.util.concurrent</exclude>
-                                    </excludes>
+                                    <!--<excludes>-->
+                                        <!--<exclude>com.google.common.util.concurrent</exclude>-->
+                                    <!--</excludes>-->
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.common.reflect</pattern>
+                                    <shadedPattern>hidden.gaialib.google.common.reflect</shadedPattern>
                                 </relocation>
 
                                 <!--<relocation>-->
