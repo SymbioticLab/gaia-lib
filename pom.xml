@@ -90,10 +90,12 @@
                                 </excludes>
                             </artifactSet>
                             <relocations>
+				    <!--
                                 <relocation>
                                     <pattern>com.google</pattern>
                                     <shadedPattern>hidden.gaialib.google</shadedPattern>
                                 </relocation>
+-->
                                 <!--<relocation>-->
                                     <!--<pattern>io.grpc</pattern>-->
                                     <!--<shadedPattern>hidden.gaialib.grpc</shadedPattern>-->

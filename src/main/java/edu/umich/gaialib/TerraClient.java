@@ -43,12 +43,12 @@ public class TerraClient {
     /**
      * Say hello to server.
      */
-    public TerraFuture<HelloReply> greet(String name) {
+    public ListenableFuture<HelloReply> greet(String name) {
         logger.info("TerraClient.greet called!!!");
         HelloRequest request = HelloRequest.newBuilder().setName(name).build();
         ListenableFuture<HelloReply> helloReplyFuture =
                         futureStub.sayHello(request);
         // vill variable go out of scope?
-        return new TerraFuture<HelloReply>(helloReplyFuture);
+        return helloReplyFuture;
     }
 }
