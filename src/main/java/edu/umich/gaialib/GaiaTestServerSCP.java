@@ -39,7 +39,7 @@ public class GaiaTestServerSCP {
                 String dataName = finfo.getDataFilename();
 
                 String trimmedDirPath = dataName.substring( 0 , dataName.lastIndexOf("/"));
-                trimmedDirPath = trimmedDirPath.substring(0 , dataName.lastIndexOf("/"));
+                trimmedDirPath = trimmedDirPath.substring(0 , trimmedDirPath.lastIndexOf("/"));
 
                 // trim to only include the /output
 
