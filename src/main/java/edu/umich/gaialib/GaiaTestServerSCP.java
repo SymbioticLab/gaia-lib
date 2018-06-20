@@ -37,7 +37,7 @@ public class GaiaTestServerSCP {
                 ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
 
                 String dataName = finfo.getDataFilename();
-                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("output") ) + "output";
+                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("data") ) + "data";
 
                 // trim to only include the /output
 
