@@ -37,7 +37,8 @@ public class GaiaTestServerSCP {
                 ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
 
                 String dataName = finfo.getDataFilename();
-                String trimmedData = dataName.substring( 0 , dataName.lastIndexOf("data") ) + "data";
+                
+                String trimmedDirPath = dataName.substring( 0 , dataName.lastIndexOf("/") ) + "/";
 
                 // trim to only include the /output
 
@@ -63,9 +64,9 @@ public class GaiaTestServerSCP {
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
 //                String cmd_mkdir = "ssh wentingt@" + dstIP + " 'mkdir -p " + trimmedData + "'";
-                String cmd_mkdir = "ssh wentingt@" + dstIP + " mkdir -p " + trimmedData ;
+                String cmd_mkdir = "ssh wentingt@" + dstIP + " mkdir -p " + trimmedDirPath ;
 
-                String cmd = "scp -r " + srcIP + ":" + trimmedData + "/* " + dstIP + ":" + trimmedData;
+                String cmd = "scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
 
                 System.out.println("Invoking " + cmd_mkdir);
                 System.out.println("Invoking " + cmd);
