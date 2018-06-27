@@ -87,6 +87,7 @@ public class GaiaTestServerSCP {
                     bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                     while ((line = bri.readLine()) != null) {
                         System.out.println(line);
+                        int inChar = System.in.read();
                     }
 
                     p = Runtime.getRuntime().exec(cmd);
@@ -100,6 +101,7 @@ public class GaiaTestServerSCP {
                     bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                     while ((line = bri.readLine()) != null) {
                         System.out.println(line);
+                        int inChar = System.in.read();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
