@@ -68,7 +68,7 @@ public class GaiaTestServerSCP {
 
                 String cmd_mkdir = "ssh jimmyyou@" + dstIP + " mkdir -p " + trimmedDirPath;
 
-                String ccmd = cmd_mkdir +  "; scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
+                String ccmd = cmd_mkdir + "; scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
 //                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/ " + dstIP + ":" + trimmedDirPath;
 
 //                System.out.println("Invoking " + cmd_mkdir);
@@ -113,43 +113,45 @@ public class GaiaTestServerSCP {
             }
 
 
-                List<Process> pool = new ArrayList<Process>();
+            int pNum = Runtime.getRuntime().availableProcessors();
+            logger.info("My JAVA Runtime procs: " + pNum);
+            List<Process> pool = new ArrayList<Process>();
 
-                for (String cmd : cmdList) {
-                    Process p = null;
-                    try {
-
-
-                        p = Runtime.getRuntime().exec(cmd);
-                        pool.add(p);
-                        System.out.println("Invoking " + cmd);
+            for (String cmd : cmdList) {
+                Process p = null;
+                try {
 
 
-                        String line;
-                        BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                        while ((line = bri.readLine()) != null) {
-                            System.out.println(line);
-                        }
+                    p = Runtime.getRuntime().exec(cmd);
+                    pool.add(p);
+                    System.out.println("Invoking " + cmd);
 
-                        bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                        while ((line = bri.readLine()) != null) {
-                            System.err.println(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
+                    String line;
+                    BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.out.println(line);
                     }
-                }
 
-                // Wait for all cmd to finish
-                logger.info("Waiting for SCP file transfer");
-                for (Process p : pool) {
-                    try {
-                        p.waitFor();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                    while ((line = bri.readLine()) != null) {
+                        System.err.println(line);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                logger.info("SCP file transfer finished");
+            }
+
+            // Wait for all cmd to finish
+            logger.info("Waiting for SCP file transfer");
+            for (Process p : pool) {
+                try {
+                    p.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            logger.info("SCP file transfer finished");
 
 /*            try {
                 System.out.println("Finished scp, Blocked");
@@ -160,14 +162,14 @@ public class GaiaTestServerSCP {
                 System.out.println("Error reading from user");
             }*/
 
-            }
-        }
-
-        public static void main(String[] args) throws IOException, InterruptedException {
-
-            testServer = new TestServer(50051);
-
-            testServer.start();
-            testServer.blockUntilShutdown();
         }
     }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        testServer = new TestServer(50051);
+
+        testServer.start();
+        testServer.blockUntilShutdown();
+    }
+}
