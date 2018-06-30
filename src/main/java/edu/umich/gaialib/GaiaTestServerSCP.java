@@ -6,6 +6,8 @@ import sun.misc.IOUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 // A simple unit test for GaiaClient and Hadoop integration
@@ -32,13 +34,13 @@ public class GaiaTestServerSCP {
                 System.out.println("Error reading from user");
             }*/
 
-            for ( int i = 0 ; i < req.getFlowsList().size(); i ++){
+            List<String> cmdList = new ArrayList<String>();
+
+            for (int i = 0; i < req.getFlowsList().size(); i++) {
 
                 ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
-
                 String dataName = finfo.getDataFilename();
-
-                String trimmedDirPath = dataName.substring( 0 , dataName.lastIndexOf("/"));
+                String trimmedDirPath = dataName.substring(0, dataName.lastIndexOf("/"));
                 // trimmedDirPath = trimmedDirPath.substring(0 , trimmedDirPath.lastIndexOf("/"));
 
                 // trim to only include the /output
@@ -64,14 +66,16 @@ public class GaiaTestServerSCP {
 //                String dstIP = req.getReducersList().get(i).getReducerIP().split(":",2)[0];
 //                String srcIP = req.getMappersList().get(i).getMapperIP().split(":",2)[0];
 
-                String cmd_mkdir = "ssh jimmyyou@" + dstIP + " mkdir -p " + trimmedDirPath ;
+                String cmd_mkdir = "ssh jimmyyou@" + dstIP + " mkdir -p " + trimmedDirPath;
 
-                String cmd = "scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
+//                String cmd = "scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
+                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/" + dstIP + ":" + trimmedDirPath;
 
-                System.out.println("Invoking " + cmd_mkdir);
-                System.out.println("Invoking " + cmd);
+//                System.out.println("Invoking " + cmd_mkdir);
+                System.out.println("Invoking " + ccmd);
+                cmdList.add(ccmd);
 
-                Process p = null;
+                /*Process p = null;
                 try {
 
                     p = Runtime.getRuntime().exec(cmd_mkdir);
@@ -85,7 +89,7 @@ public class GaiaTestServerSCP {
 
                     bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                     while ((line = bri.readLine()) != null) {
-                        System.out.println(line);
+                        System.err.println(line);
                         int inChar = System.in.read();
                     }
 
@@ -99,15 +103,51 @@ public class GaiaTestServerSCP {
 
                     bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                     while ((line = bri.readLine()) != null) {
-                        System.out.println(line);
+                        System.err.println(line);
                         int inChar = System.in.read();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                } */
             }
+
+
+                List<Process> pool = new ArrayList<Process>();
+
+                for (String cmd : cmdList) {
+                    Process p = null;
+                    try {
+
+                        p = Runtime.getRuntime().exec(cmd);
+                        pool.add(p);
+
+                        String line;
+                        BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        while ((line = bri.readLine()) != null) {
+                            System.out.println(line);
+                        }
+
+                        bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                        while ((line = bri.readLine()) != null) {
+                            System.err.println(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Wait for all cmd to finish
+                logger.info("Waiting for SCP file transfer");
+                for (Process p : pool) {
+                    try {
+                        p.waitFor();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                logger.info("SCP file transfer finished");
 
 /*            try {
                 System.out.println("Finished scp, Blocked");
@@ -118,14 +158,14 @@ public class GaiaTestServerSCP {
                 System.out.println("Error reading from user");
             }*/
 
+            }
+        }
+
+        public static void main(String[] args) throws IOException, InterruptedException {
+
+            testServer = new TestServer(50051);
+
+            testServer.start();
+            testServer.blockUntilShutdown();
         }
     }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-
-        testServer = new TestServer(50051);
-
-        testServer.start();
-        testServer.blockUntilShutdown();
-    }
-}
