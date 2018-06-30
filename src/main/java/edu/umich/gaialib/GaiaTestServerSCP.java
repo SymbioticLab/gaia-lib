@@ -69,7 +69,7 @@ public class GaiaTestServerSCP {
                 String cmd_mkdir = "ssh jimmyyou@" + dstIP + " mkdir -p " + trimmedDirPath;
 
 //                String cmd = "scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
-                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/" + dstIP + ":" + trimmedDirPath;
+                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/ " + dstIP + ":" + trimmedDirPath;
 
 //                System.out.println("Invoking " + cmd_mkdir);
                 System.out.println("Invoking " + ccmd);
