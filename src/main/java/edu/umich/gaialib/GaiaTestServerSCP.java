@@ -72,7 +72,6 @@ public class GaiaTestServerSCP {
 //                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/ " + dstIP + ":" + trimmedDirPath;
 
 //                System.out.println("Invoking " + cmd_mkdir);
-                System.out.println("Invoking " + ccmd);
                 cmdList.add(ccmd);
 
                 /*Process p = null;
@@ -120,8 +119,11 @@ public class GaiaTestServerSCP {
                     Process p = null;
                     try {
 
+
                         p = Runtime.getRuntime().exec(cmd);
                         pool.add(p);
+                        System.out.println("Invoking " + cmd);
+
 
                         String line;
                         BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
