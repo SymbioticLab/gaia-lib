@@ -68,10 +68,30 @@ public class GaiaTestServerSCP {
 
                 String cmd_mkdir = "ssh jimmyyou@" + dstIP + " mkdir -p " + trimmedDirPath;
 
-                String ccmd = cmd_mkdir + "; scp -r " + srcIP + ":" + trimmedDirPath + "/* " + dstIP + ":" + trimmedDirPath;
+                String ccmd = cmd_mkdir + "; scp " + srcIP + ":" + dataName + " " + dstIP + ":" + trimmedDirPath;
 //                String ccmd = cmd_mkdir + " ; rsync -avr " + srcIP + ":" + trimmedDirPath + "/ " + dstIP + ":" + trimmedDirPath;
 
 //                System.out.println("Invoking " + cmd_mkdir);
+
+                if (srcIP.equals(dstIP)) {
+                    logger.info("Ignoring Co-located " + dataName);
+                    continue;
+                }
+
+                long flowVolume = finfo.getFlowSize();
+                if (flowVolume == 0) {
+                    flowVolume = 1;
+                    // FIXME Terra now ignores flowVol = 0 flows
+                    logger.info("Ignoring size=0 flow " + finfo.getDataFilename());
+                    continue;
+                }
+
+                // Filter index files
+                if (dataName.endsWith("index")) {
+                    logger.info("Got an index file " + dataName);
+//                    indexFileFGs.put(fgID, fg);
+                }
+
                 cmdList.add(ccmd);
 
                 /*Process p = null;
@@ -120,7 +140,6 @@ public class GaiaTestServerSCP {
             for (String cmd : cmdList) {
                 Process p = null;
                 try {
-
 
                     p = Runtime.getRuntime().exec(cmd);
                     pool.add(p);
