@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 // A simple unit test for GaiaClient and Hadoop integration
 
@@ -132,6 +133,9 @@ public class GaiaTestServerSCP {
                 } */
             }
 
+            // Then remove duplicate commands
+            List<String> dedupedCmds = cmdList.stream().distinct().collect(Collectors.toList());
+            logger.info("Trimmed {} SCP commands" + (cmdList.size() - dedupedCmds.size()));
 
             int pNum = Runtime.getRuntime().availableProcessors();
             logger.info("My JAVA Runtime procs: " + pNum);
@@ -145,8 +149,7 @@ public class GaiaTestServerSCP {
                     pool.add(p);
                     System.out.println("Invoking " + cmd);
 
-
-                    String line;
+/*                    String line;
                     BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
                     while ((line = bri.readLine()) != null) {
                         System.out.println(line);
@@ -155,7 +158,7 @@ public class GaiaTestServerSCP {
                     bri = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                     while ((line = bri.readLine()) != null) {
                         System.err.println(line);
-                    }
+                    }*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
