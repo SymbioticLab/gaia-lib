@@ -64,8 +64,8 @@ public class TerraClient {
      */
 
     public TerraFuture<ShuffleInfoReply> submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
-        logger.info("NEW! Try to submit ShuffleInfo to controller");
-        System.out.println("NEW!!! Submitting ShuffleInfo!!!");
+        logger.info("Try to submit ShuffleInfo to controller");
+//        System.out.println("NEW!!! Submitting ShuffleInfo!!!");
 
         ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
         sinfoBuiler.setJobID(jobID).setUsername(username);
@@ -88,7 +88,7 @@ public class TerraClient {
                     tmpFlow.setMapperIP(mappersIP.get(fe.getValue().getMapAttemptID()));
                 }
                 else {
-                    logger.info("no mapIP!");
+                    logger.warning("no mapIP!");
 //                    throw (new Exception("no map IP"));
                 }
             }
@@ -100,7 +100,7 @@ public class TerraClient {
                     tmpFlow.setReducerIP(reducersIP.get(fe.getValue().getReduceAttemptID()));
                 }
                 else {
-                    logger.info("no reduceIP!");
+                    logger.warning("no reduceIP!");
 //                    throw (new Exception("no map IP"));
                 }
             }
