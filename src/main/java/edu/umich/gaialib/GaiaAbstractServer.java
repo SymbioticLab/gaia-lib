@@ -62,6 +62,7 @@ public abstract class GaiaAbstractServer {
         @Override
         public void submitShuffleInfo(ShuffleInfo req, StreamObserver<ShuffleInfoReply> responseObserver) {
 
+            logger.info("Received ShuffleInfo, size: " + req.getSerializedSize());
             // do the job abstractly
             processReq(req);
 
