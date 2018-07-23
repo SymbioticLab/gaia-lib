@@ -5,16 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.umich.gaia</groupId>
-    <artifactId>gaia-lib</artifactId>
+    <artifactId>gaia-lib-all</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>gaia-lib-orig</module>
         <module>gaia-lib-shaded</module>
+        <module>gaia-lib</module>
     </modules>
 
-    <name>gaia-lib</name>
-    <url>http://maven.apache.org</url>
+    <!--<name>gaia-lib-all</name>-->
+    <!--<url>http://maven.apache.org</url>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
