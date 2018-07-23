@@ -16,4 +16,9 @@ public class TerraFuture<T> {
     public void setDone(boolean done) {
         isDone = done;
     }
+
+    // FIXME: this is not the intended semantics for Future.get()
+    public boolean get() {
+        return isDone;
+    }
 }
