@@ -6,6 +6,7 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 // A simple unit test for GaiaClient and Hadoop integration
@@ -20,15 +21,15 @@ public class GaiaTestServer {
             super(port);
         }
 
-        public void processReq(ShuffleInfo req) {
-            logger.info("Received req: " + req);
+        @Override
+        public void processReq(String username, String jobID, List<ShuffleInfo.FlowInfo> flowsList) {
+            logger.info("Received req: " + username + jobID);
 
             System.out.println("Waiting for command to proceed");
             try {
                 int inChar = System.in.read();
                 System.out.print("Now proceeding");
-            }
-            catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Error reading from user");
             }
 

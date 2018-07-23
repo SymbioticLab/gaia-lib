@@ -22,8 +22,8 @@ public class GaiaTestServerSCP {
             super(port);
         }
 
-        public void processReq(ShuffleInfo req) {
-            logger.info("Received req: " + req);
+        public void processReq(String username, String jobID, List<ShuffleInfo.FlowInfo> flowsList) {
+            logger.info("Received req: " + username + jobID);
 
 /*            try {
                 System.out.println("Finished scp, Blocked");
@@ -36,9 +36,9 @@ public class GaiaTestServerSCP {
 
             List<String> cmdList = new ArrayList<String>();
 
-            for (int i = 0; i < req.getFlowsList().size(); i++) {
+            for (int i = 0; i < flowsList.size(); i++) {
 
-                ShuffleInfo.FlowInfo finfo = req.getFlowsList().get(i);
+                ShuffleInfo.FlowInfo finfo = flowsList.get(i);
                 String dataName = finfo.getDataFilename();
                 String trimmedDirPath = dataName.substring(0, dataName.lastIndexOf("/"));
                 // trimmedDirPath = trimmedDirPath.substring(0 , trimmedDirPath.lastIndexOf("/"));

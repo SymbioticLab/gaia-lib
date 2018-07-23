@@ -4,7 +4,9 @@ import edu.umich.gaialib.gaiaprotos.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class GaiaAbstractServer {
@@ -18,7 +20,7 @@ public abstract class GaiaAbstractServer {
     }
 
     public void start() throws IOException {
-    /* The port on which the server should run */
+        /* The port on which the server should run */
         int port = 50051;
         server = ServerBuilder.forPort(port)
                 .addService(new ShuffleServiceImpl())
@@ -62,16 +64,24 @@ public abstract class GaiaAbstractServer {
         @Override
         public void submitShuffleInfo(ShuffleInfo req, StreamObserver<ShuffleInfoReply> responseObserver) {
 
-            logger.info("Received ShuffleInfo, size: " + req.getSerializedSize());
+            logger.info("Received single ShuffleInfo, size: " + req.getSerializedSize());
             // do the job abstractly
-            processReq(req);
+            processReq(req.getUsername(), req.getJobID(), req.getFlowsList());
 
             ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Request Complete").build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }
+
+        public StreamObserver<ShuffleInfo> submitShuffleInfoStream(StreamObserver<ShuffleInfoReply> responseObserver) {
+
+            return null;
+        }
+
     }
 
-    public abstract void processReq(ShuffleInfo req);
+    protected abstract void processReq(String username, String jobID, List<ShuffleInfo.FlowInfo> flowsList);
+
+//    public abstract void processReq(ShuffleInfo req);
 
 }
