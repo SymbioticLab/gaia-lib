@@ -95,7 +95,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -103,6 +103,9 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedArtifactId>gaia-lib-shaded</shadedArtifactId>
+                            <!--<shadedClassifierName>shaded</shadedClassifierName>-->
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
@@ -124,6 +127,10 @@
                                 <relocation>
                                     <pattern>io.grpc</pattern>
                                     <shadedPattern>hidden.gaialib.grpc</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.netty</pattern>
+                                    <shadedPattern>hidden.gaialib.io.netty</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
