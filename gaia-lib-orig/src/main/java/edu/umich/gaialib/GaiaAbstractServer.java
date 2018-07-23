@@ -6,6 +6,7 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -73,9 +74,37 @@ public abstract class GaiaAbstractServer {
             responseObserver.onCompleted();
         }
 
-        public StreamObserver<ShuffleInfo> submitShuffleInfoStream(StreamObserver<ShuffleInfoReply> responseObserver) {
+        public StreamObserver<ShuffleInfo> submitShuffleInfoStream(final StreamObserver<ShuffleInfoReply> responseObserver) {
 
-            return null;
+            return new StreamObserver<ShuffleInfo>() {
+                String username = null;
+                String jobID = null;
+                List<ShuffleInfo.FlowInfo> flowsList = new ArrayList<ShuffleInfo.FlowInfo>();
+
+                public void onNext(ShuffleInfo req) {
+                    if (username == null) username = req.getUsername();
+                    if (jobID == null) jobID = req.getJobID();
+                    if (req.getFlowsList().size() > 0) flowsList.addAll(req.getFlowsList());
+                }
+
+                public void onError(Throwable throwable) {
+                    logger.warning("Error in submitShuffleInfoStream");
+                    throwable.printStackTrace();
+                }
+
+                public void onCompleted() {
+
+                    if (flowsList.size() > 0) {
+                        processReq(username, jobID, flowsList);
+                    } else {
+                        logger.info("Shuffle Request has no flowInfo, skipping");
+                    }
+
+                    ShuffleInfoReply reply = ShuffleInfoReply.newBuilder().setMessage("Request Complete").build();
+                    responseObserver.onNext(reply);
+                    responseObserver.onCompleted();
+                }
+            };
         }
 
     }
