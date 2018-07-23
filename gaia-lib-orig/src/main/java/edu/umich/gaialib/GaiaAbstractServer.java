@@ -82,9 +82,12 @@ public abstract class GaiaAbstractServer {
                 List<ShuffleInfo.FlowInfo> flowsList = new ArrayList<ShuffleInfo.FlowInfo>();
 
                 public void onNext(ShuffleInfo req) {
+                    int size = req.getFlowsCount();
+                    logger.info("Received ShuffleInfoStream MSG, flows: " + size + " size: " + req.getSerializedSize());
+
                     if (username == null) username = req.getUsername();
                     if (jobID == null) jobID = req.getJobID();
-                    if (req.getFlowsList().size() > 0) flowsList.addAll(req.getFlowsList());
+                    if (size > 0) flowsList.addAll(req.getFlowsList());
                 }
 
                 public void onError(Throwable throwable) {
