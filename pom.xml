@@ -102,6 +102,9 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
                             <artifactSet>
                                 <excludes>
                                     <exclude>classworlds:classworlds</exclude>
