@@ -12,7 +12,7 @@
     <modules>
         <module>gaia-lib-orig</module>
         <module>gaia-lib-shaded</module>
-        <module>gaia-lib</module>
+        <!--<module>gaia-lib</module>-->
     </modules>
 
     <!--<name>gaia-lib-all</name>-->
