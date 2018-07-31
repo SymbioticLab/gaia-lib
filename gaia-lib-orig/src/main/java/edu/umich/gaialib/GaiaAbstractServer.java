@@ -7,6 +7,7 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -79,7 +80,7 @@ public abstract class GaiaAbstractServer {
             return new StreamObserver<ShuffleInfo>() {
                 String username = null;
                 String jobID = null;
-                List<ShuffleInfo.FlowInfo> flowsList = new ArrayList<ShuffleInfo.FlowInfo>();
+                List<ShuffleInfo.FlowInfo> flowsList = new LinkedList<ShuffleInfo.FlowInfo>();
 
                 public void onNext(ShuffleInfo req) {
                     int size = req.getFlowsCount();
