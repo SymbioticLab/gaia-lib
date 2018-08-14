@@ -140,7 +140,7 @@ public class TerraClient {
     @Deprecated
     public TerraFuture<ShuffleInfoReply> submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP,
                                                            Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
-        logger.info("Try to submit ShuffleInfo to controller flowInfos = {}" + filenameToFlowsMap.size());
+        logger.info("Try to submit ShuffleInfo to controller flowInfos = " + filenameToFlowsMap.size());
 //        System.out.println("NEW!!! Submitting ShuffleInfo!!!");
 
         ArrayList<ShuffleInfo> shuffleInfos = new ArrayList<ShuffleInfo>();
@@ -180,14 +180,15 @@ public class TerraClient {
                 }
             }
 
+            // Add flow to sinfoBuilder
+            sinfoBuiler.addFlows(tmpFlowInfo);
+            // Then check if we have more flows than threshold
             if (sinfoBuiler.getFlowsCount() >= MAX_FLOW_PER_MSG) {
                 // If the msg if full, add to buffer and create a new msg
                 shuffleInfos.add(sinfoBuiler.build());
                 sinfoBuiler = ShuffleInfo.newBuilder();
                 sinfoBuiler.setJobID(jobID).setUsername(username);
 
-            } else {
-                sinfoBuiler.addFlows(tmpFlowInfo);
             }
         }
 
