@@ -7,6 +7,7 @@ import io.grpc.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -71,10 +72,75 @@ public class TerraClient {
     /**
      * Submit ShuffleInfo to Gaia Controller, use "user:job:map:reduce" as the key for Map<String , FlowInfo>
      * put "TaskAttemptID, IP" in Map<String, String >
+     * Change filenameToFlowsMap into List<Map.Entry<String, FlowInfo>>
      */
-
-    public TerraFuture<ShuffleInfoReply> submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP, Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
+    public TerraFuture<ShuffleInfoReply> submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP,
+                                                           Map<String, String> reducersIP, List<FlowInfo> flowInfoList) {
         logger.info("Try to submit ShuffleInfo to controller");
+//        System.out.println("NEW!!! Submitting ShuffleInfo!!!");
+
+        ArrayList<ShuffleInfo> shuffleInfos = new ArrayList<ShuffleInfo>();
+        ShuffleInfo.Builder sinfoBuiler = ShuffleInfo.newBuilder();
+        sinfoBuiler.setJobID(jobID).setUsername(username);
+
+        for (FlowInfo fe : flowInfoList) {
+
+
+            ShuffleInfo.FlowInfo.Builder tmpFlowInfo = ShuffleInfo.FlowInfo.newBuilder()
+                    .setDataFilename(fe.getDataFilename())
+                    .setMapAttemptID(fe.getMapAttemptID())
+                    .setReduceAttemptID(fe.getReduceAttemptID())
+                    .setStartOffSet(fe.getStartOffset())
+                    .setFlowSize(fe.getShuffleSize_byte());
+
+            if (fe.getMapIP() != null) {
+                tmpFlowInfo.setMapperIP(fe.getMapIP());
+            } else {
+                if (mappersIP.containsKey(fe.getMapAttemptID())) {
+                    tmpFlowInfo.setMapperIP(mappersIP.get(fe.getMapAttemptID()));
+                } else {
+                    logger.warning("no mapIP!");
+//                    throw (new Exception("no map IP"));
+                }
+            }
+
+            if (fe.getReduceIP() != null) {
+                tmpFlowInfo.setReducerIP(fe.getReduceIP());
+            } else {
+                if (reducersIP.containsKey(fe.getReduceAttemptID())) {
+                    tmpFlowInfo.setReducerIP(reducersIP.get(fe.getReduceAttemptID()));
+                } else {
+                    logger.warning("no reduceIP!");
+//                    throw (new Exception("no map IP"));
+                }
+            }
+
+            if (sinfoBuiler.getFlowsCount() >= MAX_FLOW_PER_MSG) {
+                // If the msg if full, add to buffer and create a new msg
+                shuffleInfos.add(sinfoBuiler.build());
+                sinfoBuiler = ShuffleInfo.newBuilder();
+                sinfoBuiler.setJobID(jobID).setUsername(username);
+
+            } else {
+                sinfoBuiler.addFlows(tmpFlowInfo);
+            }
+        }
+
+        // Add the last msg
+        shuffleInfos.add(sinfoBuiler.build());
+
+        return submitShuffleInfos(shuffleInfos);
+
+    }
+
+    /**
+     * Submit ShuffleInfo to Gaia Controller, use "user:job:map:reduce" as the key for Map<String , FlowInfo>
+     * put "TaskAttemptID, IP" in Map<String, String >
+     */
+    @Deprecated
+    public TerraFuture<ShuffleInfoReply> submitShuffleInfo(String username, String jobID, Map<String, String> mappersIP,
+                                                           Map<String, String> reducersIP, Map<String, FlowInfo> filenameToFlowsMap) {
+        logger.info("Try to submit ShuffleInfo to controller flowInfos = {}" + filenameToFlowsMap.size());
 //        System.out.println("NEW!!! Submitting ShuffleInfo!!!");
 
         ArrayList<ShuffleInfo> shuffleInfos = new ArrayList<ShuffleInfo>();
